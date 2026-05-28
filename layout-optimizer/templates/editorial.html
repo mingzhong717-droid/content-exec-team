@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editorial Cover</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 900px;
+    height: 383px;
+    background: #f5f0e8;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* 左侧色块 */
+  .accent-bar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 8px;
+    background: #1a1a1a;
+  }
+
+  /* 右侧大号装饰数字 */
+  .deco-number {
+    position: absolute;
+    right: -20px;
+    top: -30px;
+    font-size: 280px;
+    font-weight: 900;
+    color: rgba(0,0,0,0.04);
+    line-height: 1;
+    font-family: 'Georgia', serif;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  /* 顶部栏 */
+  .header {
+    position: absolute;
+    top: 0; left: 8px; right: 0;
+    height: 48px;
+    border-bottom: 2px solid #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+  }
+  .pub-name {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #1a1a1a;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+  }
+  .issue {
+    font-size: 11px;
+    color: #888;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: 1px;
+  }
+
+  /* 主内容 */
+  .content {
+    position: absolute;
+    top: 48px; left: 8px; right: 0; bottom: 0;
+    padding: 28px 40px 24px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .category {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #c0392b;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    margin-bottom: 12px;
+  }
+
+  .title {
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 1.15;
+    color: #1a1a1a;
+    max-width: 580px;
+    /* 长标题自动缩小 */
+  }
+
+  .title.long { font-size: 28px; }
+
+  .divider {
+    width: 48px;
+    height: 3px;
+    background: #1a1a1a;
+    margin: 16px 0;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.65;
+    max-width: 500px;
+    font-style: italic;
+  }
+
+  /* 底部 */
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .author {
+    font-size: 12px;
+    color: #888;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    letter-spacing: 0.5px;
+  }
+  .date {
+    font-size: 12px;
+    color: #aaa;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+  }
+</style>
+</head>
+<body>
+  <div class="accent-bar"></div>
+  <div class="deco-number">O</div>
+
+  <div class="header">
+    <div class="pub-name">{{PUB_NAME}}</div>
+    <div class="issue">{{DATE}}</div>
+  </div>
+
+  <div class="content">
+    <div>
+      <div class="category" id="category">{{CATEGORY}}</div>
+      <div class="title" id="title">{{TITLE}}</div>
+      <div class="divider"></div>
+      <div class="subtitle" id="subtitle">{{SUBTITLE}}</div>
+    </div>
+    <div class="footer">
+      <div class="author" id="author">{{AUTHOR}}</div>
+      <div class="date" id="date">{{DATE}}</div>
+    </div>
+  </div>
+
+<script>
+  // 占位符说明：
+  // {{TITLE}}    — 文章标题（建议 ≤18 字，超过自动缩小字号）
+  // {{SUBTITLE}} — 一句话摘要或副标题（建议 ≤50 字）
+  // {{CATEGORY}} — 分类标签，如 "观点 · 评论"
+  // {{PUB_NAME}} — 公众号名称
+  // {{AUTHOR}}   — 作者名，如 "作者：张三"
+  // {{DATE}}     — 发布日期，如 "2025.06"
+
+  // 长标题自动降级字号
+  const titleEl = document.getElementById('title');
+  if (titleEl && titleEl.textContent.length > 16) {
+    titleEl.classList.add('long');
+  }
+</script>
+</body>
+</html>

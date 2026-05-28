@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minimal Cover</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 900px;
+    height: 383px;
+    background: #faf8f5;
+    font-family: 'Georgia', 'STSong', '宋体', serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* 极简边框 */
+  .frame {
+    position: absolute;
+    inset: 20px;
+    border: 1px solid #d4c9b8;
+    pointer-events: none;
+  }
+  .frame::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border: 1px solid #e8e0d0;
+  }
+
+  /* 顶部装饰线 */
+  .top-line {
+    position: absolute;
+    top: 36px;
+    left: 60px; right: 60px;
+    height: 1px;
+    background: #c8b89a;
+  }
+
+  /* 主内容 */
+  .content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 80px;
+    text-align: center;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #b8a898;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    margin-bottom: 20px;
+  }
+
+  .title {
+    font-size: 36px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: #2c2416;
+    letter-spacing: 2px;
+    max-width: 620px;
+  }
+  .title.long { font-size: 26px; letter-spacing: 1px; }
+
+  /* 中间装饰符 */
+  .ornament {
+    margin: 18px 0;
+    color: #c8b89a;
+    font-size: 18px;
+    letter-spacing: 8px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: #8a7a6a;
+    line-height: 1.8;
+    max-width: 480px;
+    font-style: italic;
+  }
+
+  /* 底部 */
+  .bottom-line {
+    position: absolute;
+    bottom: 36px;
+    left: 60px; right: 60px;
+    height: 1px;
+    background: #c8b89a;
+  }
+
+  .meta {
+    position: absolute;
+    bottom: 20px;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 10px;
+    color: #b8a898;
+    letter-spacing: 2px;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  /* 四角装饰 */
+  .corner {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-color: #c8b89a;
+    border-style: solid;
+  }
+  .corner-tl { top: 26px; left: 26px; border-width: 1px 0 0 1px; }
+  .corner-tr { top: 26px; right: 26px; border-width: 1px 1px 0 0; }
+  .corner-bl { bottom: 26px; left: 26px; border-width: 0 0 1px 1px; }
+  .corner-br { bottom: 26px; right: 26px; border-width: 0 1px 1px 0; }
+</style>
+</head>
+<body>
+  <div class="frame"></div>
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+  <div class="top-line"></div>
+  <div class="bottom-line"></div>
+
+  <div class="content">
+    <div class="eyebrow" id="eyebrow">{{CATEGORY}}</div>
+    <div class="title" id="title">{{TITLE}}</div>
+    <div class="ornament">· · ·</div>
+    <div class="subtitle" id="subtitle">{{SUBTITLE}}</div>
+  </div>
+
+  <div class="meta" id="meta">{{PUB_NAME}} &nbsp;·&nbsp; {{DATE}}</div>
+
+<script>
+  // 占位符说明：
+  // {{TITLE}}    — 文章标题（建议 ≤16 字，适合故事性标题）
+  // {{SUBTITLE}} — 一句话引语或摘要（建议 ≤45 字）
+  // {{CATEGORY}} — 分类，如 "故事 · 叙述"
+  // {{PUB_NAME}} — 公众号名称
+  // {{DATE}}     — 日期，如 "二〇二五年六月"（中文日期更有文学感）
+
+  const titleEl = document.getElementById('title');
+  if (titleEl && titleEl.textContent.length > 14) {
+    titleEl.classList.add('long');
+  }
+</script>
+</body>
+</html>

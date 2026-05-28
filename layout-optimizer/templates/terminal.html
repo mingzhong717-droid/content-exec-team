@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terminal Cover</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 900px;
+    height: 383px; /* 2.35:1 */
+    background: #0d1117;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* 背景网格纹理 */
+  .grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,136,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* 顶部 terminal 标题栏 */
+  .titlebar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 36px;
+    background: #161b22;
+    border-bottom: 1px solid #30363d;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 8px;
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot-red   { background: #ff5f57; }
+  .dot-yellow{ background: #febc2e; }
+  .dot-green { background: #28c840; }
+  .tab-title {
+    margin-left: 12px;
+    color: #8b949e;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  /* 主内容区 */
+  .content {
+    position: absolute;
+    top: 36px; left: 0; right: 0; bottom: 0;
+    padding: 28px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .prompt-line {
+    color: #3fb950;
+    font-size: 13px;
+    margin-bottom: 16px;
+    opacity: 0.8;
+  }
+  .prompt-line span { color: #58a6ff; }
+
+  .title {
+    color: #e6edf3;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.3;
+    max-width: 600px;
+    /* 由 JS 注入 */
+  }
+
+  .subtitle {
+    margin-top: 14px;
+    color: #8b949e;
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 520px;
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 10px;
+    height: 20px;
+    background: #3fb950;
+    margin-left: 4px;
+    vertical-align: middle;
+    opacity: 0.9;
+  }
+
+  /* 右侧装饰：代码片段 */
+  .code-deco {
+    position: absolute;
+    right: 40px;
+    top: 60px;
+    bottom: 20px;
+    width: 220px;
+    opacity: 0.18;
+    font-size: 11px;
+    color: #58a6ff;
+    line-height: 1.8;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  /* 底部 meta */
+  .meta {
+    position: absolute;
+    bottom: 16px;
+    left: 40px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .tag {
+    background: rgba(63,185,80,0.15);
+    border: 1px solid rgba(63,185,80,0.3);
+    color: #3fb950;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 3px;
+    letter-spacing: 0.5px;
+  }
+  .date {
+    color: #484f58;
+    font-size: 11px;
+  }
+</style>
+</head>
+<body>
+  <div class="grid"></div>
+
+  <div class="titlebar">
+    <div class="dot dot-red"></div>
+    <div class="dot dot-yellow"></div>
+    <div class="dot dot-green"></div>
+    <div class="tab-title">article.md — bash</div>
+  </div>
+
+  <div class="content">
+    <div class="prompt-line">
+      <span>~/articles</span> git:(main) ✦
+    </div>
+    <div class="title" id="title">{{TITLE}}<span class="cursor"></span></div>
+    <div class="subtitle" id="subtitle">{{SUBTITLE}}</div>
+  </div>
+
+  <div class="code-deco" id="codeDeco">
+function deploy(config) {<br>
+&nbsp;&nbsp;const env = process.env;<br>
+&nbsp;&nbsp;if (!env.TOKEN) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;throw new Error('missing');<br>
+&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;return fetch(config.url, {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;method: 'POST',<br>
+&nbsp;&nbsp;&nbsp;&nbsp;headers: { auth: env.TOKEN }<br>
+&nbsp;&nbsp;});<br>
+}<br><br>
+// run pipeline<br>
+await deploy(cfg);<br>
+console.log('done ✓');<br>
+  </div>
+
+  <div class="meta">
+    <div class="tag" id="tag">{{TAG}}</div>
+    <div class="date" id="date">{{DATE}}</div>
+  </div>
+
+<script>
+  // 由 Agent 调用时替换以下占位符：
+  // {{TITLE}}    — 文章标题（建议 ≤20 字）
+  // {{SUBTITLE}} — 一句话摘要（建议 ≤40 字）
+  // {{TAG}}      — 文章标签，如 "技术 · 教程"
+  // {{DATE}}     — 发布日期，如 "2025.06"
+</script>
+</body>
+</html>

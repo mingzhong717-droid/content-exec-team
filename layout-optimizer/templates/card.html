@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Card Cover</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 900px;
+    height: 383px;
+    background: #f0f4ff;
+    font-family: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* 背景装饰圆 */
+  .bg-circle-1 {
+    position: absolute;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+    top: -100px; right: -80px;
+    pointer-events: none;
+  }
+  .bg-circle-2 {
+    position: absolute;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(16,185,129,0.1) 0%, transparent 70%);
+    bottom: -60px; left: 200px;
+    pointer-events: none;
+  }
+
+  /* 左侧主卡片 */
+  .main-card {
+    position: absolute;
+    left: 36px; top: 36px; bottom: 36px;
+    width: 380px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(99,102,241,0.12), 0 2px 8px rgba(0,0,0,0.06);
+    padding: 28px 28px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .icon-box {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .card-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #6366f1;
+  }
+
+  .card-title {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #1e1b4b;
+  }
+  .card-title.long { font-size: 18px; }
+
+  .card-subtitle {
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.6;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .pub-name {
+    font-size: 11px;
+    color: #9ca3af;
+    font-weight: 500;
+  }
+  .date {
+    font-size: 11px;
+    color: #9ca3af;
+  }
+
+  /* 右侧小卡片列表 */
+  .side-cards {
+    position: absolute;
+    left: 452px; top: 36px; right: 36px; bottom: 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .side-card {
+    flex: 1;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .side-icon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .side-icon.green  { background: rgba(16,185,129,0.12); }
+  .side-icon.orange { background: rgba(245,158,11,0.12); }
+  .side-icon.blue   { background: rgba(59,130,246,0.12); }
+
+  .side-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: #374151;
+    line-height: 1.3;
+  }
+  .side-sub {
+    font-size: 10px;
+    color: #9ca3af;
+    margin-top: 2px;
+  }
+</style>
+</head>
+<body>
+  <div class="bg-circle-1"></div>
+  <div class="bg-circle-2"></div>
+
+  <!-- 主卡片 -->
+  <div class="main-card">
+    <div class="card-header">
+      <div class="icon-box" id="mainIcon">{{ICON}}</div>
+      <div class="card-label" id="category">{{CATEGORY}}</div>
+    </div>
+    <div class="card-title" id="title">{{TITLE}}</div>
+    <div class="card-subtitle" id="subtitle">{{SUBTITLE}}</div>
+    <div class="card-footer">
+      <div class="pub-name" id="pubName">{{PUB_NAME}}</div>
+      <div class="date" id="date">{{DATE}}</div>
+    </div>
+  </div>
+
+  <!-- 右侧要点卡片（由 Agent 填入文章核心要点） -->
+  <div class="side-cards">
+    <div class="side-card">
+      <div class="side-icon green" id="icon1">{{ICON1}}</div>
+      <div>
+        <div class="side-text" id="point1">{{POINT1}}</div>
+        <div class="side-sub" id="desc1">{{DESC1}}</div>
+      </div>
+    </div>
+    <div class="side-card">
+      <div class="side-icon orange" id="icon2">{{ICON2}}</div>
+      <div>
+        <div class="side-text" id="point2">{{POINT2}}</div>
+        <div class="side-sub" id="desc2">{{DESC2}}</div>
+      </div>
+    </div>
+    <div class="side-card">
+      <div class="side-icon blue" id="icon3">{{ICON3}}</div>
+      <div>
+        <div class="side-text" id="point3">{{POINT3}}</div>
+        <div class="side-sub" id="desc3">{{DESC3}}</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // 占位符说明：
+  // {{TITLE}}    — 文章标题
+  // {{SUBTITLE}} — 一句话摘要（建议 ≤40 字）
+  // {{CATEGORY}} — 分类，如 "工具 · 清单"
+  // {{ICON}}     — 主图标 emoji，如 🛠️ 📋 ✅
+  // {{PUB_NAME}} — 公众号名称
+  // {{DATE}}     — 日期
+  // {{POINT1/2/3}} — 文章三个核心要点（≤12 字）
+  // {{DESC1/2/3}}  — 要点补充说明（≤20 字，可留空）
+  // {{ICON1/2/3}}  — 各要点 emoji 图标
+
+  const titleEl = document.getElementById('title');
+  if (titleEl && titleEl.textContent.length > 16) {
+    titleEl.classList.add('long');
+  }
+</script>
+</body>
+</html>

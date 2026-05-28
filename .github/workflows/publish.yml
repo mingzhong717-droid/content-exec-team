@@ -1,0 +1,62 @@
+name: Publish to WeChat Draft
+
+on:
+  # API 触发（从 CatDesk 或任何地方调用）
+  repository_dispatch:
+    types: [publish]
+
+  # 手动触发（GitHub 页面点 Run workflow）
+  workflow_dispatch:
+    inputs:
+      km_url:
+        description: '学城文章链接（km.sankuai.com/...）'
+        required: true
+        type: string
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install requests playwright
+          playwright install chromium --with-deps
+
+      - name: Resolve km_url
+        id: resolve
+        run: |
+          # repository_dispatch 时从 client_payload 取，workflow_dispatch 时从 inputs 取
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            echo "km_url=${{ github.event.client_payload.km_url }}" >> $GITHUB_OUTPUT
+          else
+            echo "km_url=${{ inputs.km_url }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run publish script
+        env:
+          WECHAT_APP_ID: ${{ secrets.WECHAT_APP_ID }}
+          WECHAT_APP_SECRET: ${{ secrets.WECHAT_APP_SECRET }}
+          UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          KM_URL: ${{ steps.resolve.outputs.km_url }}
+        run: |
+          python3 scripts/publish.py "$KM_URL"
+
+      - name: Upload cover image artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cover-preview
+          path: /tmp/cover_*.png
+          if-no-files-found: ignore
+          retention-days: 3

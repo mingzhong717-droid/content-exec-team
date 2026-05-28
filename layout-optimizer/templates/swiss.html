@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Swiss Cover</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 900px;
+    height: 383px;
+    background: #ffffff;
+    font-family: 'Helvetica Neue', 'Arial', sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* 网格基准线（Swiss 设计核心） */
+  .grid-lines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .grid-lines::before {
+    content: '';
+    position: absolute;
+    left: 300px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: #e8e8e8;
+  }
+  .grid-lines::after {
+    content: '';
+    position: absolute;
+    top: 80px;
+    left: 0; right: 0;
+    height: 1px;
+    background: #e8e8e8;
+  }
+
+  /* 顶部色带 */
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: #e63946;
+  }
+
+  /* 左侧信息列 */
+  .left-col {
+    position: absolute;
+    left: 0; top: 6px; bottom: 0;
+    width: 300px;
+    padding: 28px 28px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid #e8e8e8;
+  }
+
+  .pub-name {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #1a1a1a;
+  }
+
+  .category-block {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .category-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #e63946;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .category-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a1a;
+    line-height: 1.2;
+  }
+
+  .meta-block {
+    font-size: 10px;
+    color: #aaa;
+    letter-spacing: 1px;
+    line-height: 1.8;
+  }
+
+  /* 右侧主内容 */
+  .right-col {
+    position: absolute;
+    left: 300px; top: 6px; right: 0; bottom: 0;
+    padding: 28px 36px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .title {
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #1a1a1a;
+    letter-spacing: -0.5px;
+  }
+  .title.long { font-size: 24px; }
+
+  .subtitle {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.7;
+    margin-top: 12px;
+    max-width: 460px;
+  }
+
+  /* 底部标签行 */
+  .tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #e63946;
+    border: 1px solid #e63946;
+    padding: 3px 8px;
+  }
+
+  /* 右下角大号装饰 */
+  .deco {
+    position: absolute;
+    right: 20px;
+    bottom: -10px;
+    font-size: 120px;
+    font-weight: 900;
+    color: rgba(230,57,70,0.06);
+    line-height: 1;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+  <div class="top-bar"></div>
+  <div class="grid-lines"></div>
+  <div class="deco">NEWS</div>
+
+  <div class="left-col">
+    <div class="pub-name" id="pubName">{{PUB_NAME}}</div>
+    <div class="category-block">
+      <div class="category-label">Category</div>
+      <div class="category-name" id="category">{{CATEGORY}}</div>
+    </div>
+    <div class="meta-block" id="meta">
+      {{DATE}}<br>
+      {{AUTHOR}}
+    </div>
+  </div>
+
+  <div class="right-col">
+    <div>
+      <div class="title" id="title">{{TITLE}}</div>
+      <div class="subtitle" id="subtitle">{{SUBTITLE}}</div>
+    </div>
+    <div class="tags" id="tags">
+      <!-- 由 Agent 动态插入 <div class="tag">标签</div> -->
+      {{TAGS}}
+    </div>
+  </div>
+
+<script>
+  // 占位符说明：
+  // {{TITLE}}    — 文章标题
+  // {{SUBTITLE}} — 摘要（建议 ≤60 字）
+  // {{CATEGORY}} — 分类，如 "行业资讯"
+  // {{PUB_NAME}} — 公众号名称
+  // {{AUTHOR}}   — 作者，如 "作者：李四"
+  // {{DATE}}     — 日期，如 "2025.06.15"
+  // {{TAGS}}     — 多个 <div class="tag">xxx</div> 拼接
+
+  const titleEl = document.getElementById('title');
+  if (titleEl && titleEl.textContent.length > 18) {
+    titleEl.classList.add('long');
+  }
+</script>
+</body>
+</html>
