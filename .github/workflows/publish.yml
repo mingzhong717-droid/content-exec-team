@@ -9,14 +9,14 @@ on:
   workflow_dispatch:
     inputs:
       km_url:
-        description: '学城文章链接（km.sankuai.com/...）'
+        description: "学城文章链接（km.sankuai.com/...）"
         required: true
         type: string
 
 jobs:
   publish:
     runs-on: self-hosted
-    timeout-minutes: 10
+    timeout-minutes: 30
 
     steps:
       - name: Checkout
@@ -27,20 +27,31 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: ~\AppData\Local\ms-playwright
+          key: playwright-chromium-v1
+
       - name: Install dependencies
-        run: |
-          pip install requests playwright
-          playwright install chromium --with-deps
+        run: pip install requests playwright
+        shell: pwsh
+
+      - name: Install Playwright browser (if not cached)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: playwright install chromium --with-deps
+        shell: pwsh
 
       - name: Resolve km_url
         id: resolve
         run: |
-          # repository_dispatch 时从 client_payload 取，workflow_dispatch 时从 inputs 取
-          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
-            echo "km_url=${{ github.event.client_payload.km_url }}" >> $GITHUB_OUTPUT
-          else
-            echo "km_url=${{ inputs.km_url }}" >> $GITHUB_OUTPUT
-          fi
+          if ("${{ github.event_name }}" -eq "repository_dispatch") {
+            echo "km_url=${{ github.event.client_payload.km_url }}" >> $env:GITHUB_OUTPUT
+          } else {
+            echo "km_url=${{ inputs.km_url }}" >> $env:GITHUB_OUTPUT
+          }
+        shell: pwsh
 
       - name: Run publish script
         env:
@@ -49,14 +60,14 @@ jobs:
           UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           KM_URL: ${{ steps.resolve.outputs.km_url }}
-        run: |
-          python3 scripts/publish.py "$KM_URL"
+        run: python scripts/publish.py "$env:KM_URL"
+        shell: pwsh
 
       - name: Upload cover image artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: cover-preview
-          path: /tmp/cover_*.png
+          path: ~\AppData\Local\Temp\cover_*.png
           if-no-files-found: ignore
           retention-days: 3
